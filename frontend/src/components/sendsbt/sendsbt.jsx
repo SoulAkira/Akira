@@ -1,18 +1,26 @@
-import React, { useEffect, useRef } from 'react';
-import { useContract, useContractRead, useContractWrite } from '@thirdweb-dev/react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useContract, useContractRead, useContractWrite, useChainId, useAccount } from '@thirdweb-dev/react';
+import { ethers } from 'ethers';
 import CommunitySBTABI from '../../abi/CommunitySBT.json';
-import { useSbtIPFS } from '../../hooks/hooks'
+import { useSbtIPFS } from '../../hooks/hooks';
+
+const myContract = process.env.CONTRACT_ADDR;
+
 const Sendsbt = (props) => {
   let cName = "CSBS";
   let cDescription = "CSBS description";
   const myCanvas = useRef();
+  const [MssageData, setMssageData] = useState('')
+  const chainId = useChainId();
+  const Account = useAccount();
 
-  const { contract, isLoading, error } = useContract("0x3CA7dCA365D135e51210EFFE70b158cCd82d3deF", CommunitySBTABI);
+  // rory合约: 0x3CA7dCA365D135e51210EFFE70b158cCd82d3deF
+  const { contract } = useContract(process.env.REACT_APP_JHF_CONTRACT_ADDR, CommunitySBTABI);
+  // const { contract } = useContract("0xe3ee6F3AF21f7010bfE2f72680a9d36cFa871Ad6", CommunitySBTABI);
   const {
-    mutate: sedsbt,
-    isLoading: isSBTWithLoging,
-    error: isSBTWithError,
+    mutateAsync: sedsbt,
   } = useContractWrite(contract, "issueBatchSBTWithEvent");
+
 
 
   const CreateImageBob = async (item) => {
@@ -22,15 +30,29 @@ const Sendsbt = (props) => {
 
   const SBTexist = async (address, tokenId) => {
     try {
-      console.log('ddd')
-      const exist = await contract.call("ownSBTs", address, tokenId)
-      console.log('exist', exist)
-      exist.toString();
-      return 0;
+      //console.log(ethers.utils)
+      //console.log('aa', ethers.utils.solidityKeccak256(['address', 'uint256'], [address, tokenId]))
+      const exist = await contract.call("addressAwardedMap", ethers.utils.solidityKeccak256(['address', 'uint256'], [address, tokenId]))
+      return exist;
     } catch (error) {
       console.log(error)
-      return 1
+      return 1;
     }
+  }
+  const checkSigner = async () => {
+    try {
+      const result = await contract.call("communityEventMap", 1)
+      //console.log(Account, result.communitySigner)
+      if (Account[0].data.address === result.communitySigner) {
+        return 1;
+      } else {
+        return 0;
+      }
+    } catch (error) {
+      console.log(error)
+      return 0;
+    }
+
   }
   function addImageProcess(src, item) {
     return new Promise((resolve, reject) => {
@@ -61,26 +83,52 @@ const Sendsbt = (props) => {
     let address = [];
     let metadata = [];
 
-    for (let index = 0; index < props.data.length; index++) {
+    try {
+      if (chainId === 80001) {
+        let singer = await checkSigner()
+        if (singer) {
+          setMssageData('Start Send ...')
+          for (let index = 0; index < props.data.length; index++) {
 
-      const list = props.data[index];
-      let exists = await SBTexist(list.address, 2);
-      if (exists) {
-        console.log('in')
-        let imageData = await CreateImageBob(list)
-        let blob = dataURItoBlob(imageData)
-        let file = new File([blob], "image.png", { type: 'image/png' });
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        let url = await useSbtIPFS(cName, cDescription, file, list.nickName, list.roleName);
-        address.push(list.address)
-        metadata.push(url)
+            const list = props.data[index];
+            let exists = await SBTexist(list.walletAddress, 1);
+            setMssageData(`IPFS UPLOAD .... ${list.walletAddress}`)
+            if (!exists) {
+              console.log('in')
+              let imageData = await CreateImageBob(list)
+              let blob = dataURItoBlob(imageData)
+              let file = new File([blob], "image.png", { type: 'image/png' });
+              // eslint-disable-next-line react-hooks/rules-of-hooks
+              let url = await useSbtIPFS(cName, cDescription, file, list.nickName, list.roleName);
+              metadata.push(url)
+              address.push(list.walletAddress)
+            }
+          }
+          setMssageData(`Send SBT...`);
+          if (metadata.length > 0) {
+            let Sentresult = await sedsbt([1, address, metadata]);
+            console.log('rrrr', Sentresult)
+            if (Sentresult.receipt.status === 1) {
+              setMssageData('Success...')
+              console.log('上傳完畢')
+            } else {
+              setMssageData('error....')
+            }
+          } else {
+            setMssageData('Over...')
+          }
+
+        } else {
+          setMssageData('not communitySigner!!')
+        }
+      } else {
+        setMssageData('Switch Mumbai NetWork!!')
       }
+    } catch (error) {
+      setMssageData('error....')
+      console.log(error)
     }
 
-    await sedsbt([2, address, metadata]);
-    if (isSBTWithLoging) {
-      console.log('上傳完畢')
-    }
   }
   function dataURItoBlob(dataURI) {
     // convert base64/URLEncoded data component to raw binary data held in a string
@@ -110,14 +158,16 @@ const Sendsbt = (props) => {
     // 開始上傳 SBT IPFS
     // 互叫智能合約
     <div>
-      <label htmlFor="my-modal-g" className="btn btn-active btn-primary">發送</label>
+      <h2>  3. Batch drop SBT to Destination addresses</h2>
+      <label htmlFor="my-modal-g" className="btn btn-active btn-primary">Drop</label>
       <input type="checkbox" id="my-modal-g" className="modal-toggle" />
       <div className="modal">
         <div className="relative modal-box">
           <label htmlFor="my-modal-g" className="absolute btn btn-sm btn-circle right-2 top-2">✕</label>
-          <h3 className="text-lg font-bold">準備</h3>
-          <p className="py-4">點下確認開始～～發送</p>
-          <button onClick={SendSBT} class="btn btn-info">確定</button>
+          <h3 className="text-lg font-bold">Ready?</h3>
+          <p className="py-4">Confirm and ～～Launch!</p>
+          <h3>{MssageData}</h3>
+          <button onClick={SendSBT} className="btn btn-info">Confirm</button>
           <canvas ref={myCanvas} width={3840} height={3840} style={{ display: 'none' }} />
         </div>
       </div>

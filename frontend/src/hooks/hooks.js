@@ -1,10 +1,13 @@
 /* Create the IPFS CID of the json data */
-import { NFTStorage } from "nft.storage";
-
+//import { NFTStorage } from "nft.storage";
+import { NFTStorage } from 'https://cdn.jsdelivr.net/npm/nft.storage/dist/bundle.esm.min.js'
 
 const client = new NFTStorage({
-  token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDExNTI3YTE3RUU4MzA4NzM2MjhBMTcyNjBkNUM2OUMzNGU0ODc4NDYiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY2NjU5ODk1MzI2NywibmFtZSI6IkNTQlMifQ.u42QJNve2Bm7Ak9L61dA9zQ7sURKEx_6maAJ3viSIhI"
+  token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDkxNjhiZDExQ2MxODIxNWM2NTNmZUQ1QjYzZjhiMTg0NDAxOTA4YjMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY2NzY1MTI1ODQ3NiwibmFtZSI6ImFraXJhIn0.DvHGGXozXPzpx-i_Q6BpWWYsf5-nOgNcpFPSSwRucv8"
 });
+
+// jhf api key ：eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDkxNjhiZDExQ2MxODIxNWM2NTNmZUQ1QjYzZjhiMTg0NDAxOTA4YjMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY2NzY1MTI1ODQ3NiwibmFtZSI6ImFraXJhIn0.DvHGGXozXPzpx-i_Q6BpWWYsf5-nOgNcpFPSSwRucv8
+// rory api key：eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDExNTI3YTE3RUU4MzA4NzM2MjhBMTcyNjBkNUM2OUMzNGU0ODc4NDYiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY2NzU3MzA5MjE4NiwibmFtZSI6IkNTQlMifQ.Oai_r-35_kj0a8FeEywh0L5L6G7AF0kE7eIvck6-lVo
 
 const useSave2IPFS = async (cName, cDescription, imageData, cURL) => {
 

@@ -3,14 +3,14 @@ import './navbar.css'
 import { RiMenu3Line, RiCloseLine } from 'react-icons/ri';
 import logo from '../../assets/logo.png'
 import { Link } from "react-router-dom";
-import { useAddress, useMetamask, useDisconnect } from "@thirdweb-dev/react";
+import { useAddress, useMetamask, useDisconnect, ConnectWallet } from "@thirdweb-dev/react";
 
 const Menu = () => (
   <>
-    <Link to="/create"><p>create community </p> </Link>
-    <Link to="/createEvent"><p>create event </p> </Link>
-    <Link to="/importSBT"><p>ImportSBT</p> </Link>
-    <Link to="/eventProfile/Rian"><p>My SBT</p></Link>
+    {/* <Link to="/create"><p>create community </p> </Link> */}
+    {/* <Link to="/createEvent"><p>create event </p> </Link> */}
+    <Link to="/importSBT"><p>Drop SBT</p> </Link>
+    <Link to="/eventProfile/Rian"><p>My</p></Link>
 
   </>
 )
@@ -46,7 +46,8 @@ const Navbar = () => {
 
         </div>
       </div>
-      <div className="navbar-sign">
+      <ConnectWallet accentColor="#f213a4" colorMode="dark" />
+      {/* <div className="navbar-sign">
         <>
           {address ? (
             <>
@@ -58,7 +59,7 @@ const Navbar = () => {
           )
           }
         </>
-      </div>
+      </div> */}
       <div className="navbar-menu">
         {toggleMenu ?
           <RiCloseLine color="#fff" size={27} onClick={() => setToggleMenu(false)} />
