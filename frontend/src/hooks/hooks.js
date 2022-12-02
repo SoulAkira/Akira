@@ -2,8 +2,10 @@
 //import { NFTStorage } from "nft.storage";
 import { NFTStorage } from 'https://cdn.jsdelivr.net/npm/nft.storage/dist/bundle.esm.min.js'
 
+
+
 const client = new NFTStorage({
-  token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDkxNjhiZDExQ2MxODIxNWM2NTNmZUQ1QjYzZjhiMTg0NDAxOTA4YjMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY2NzY1MTI1ODQ3NiwibmFtZSI6ImFraXJhIn0.DvHGGXozXPzpx-i_Q6BpWWYsf5-nOgNcpFPSSwRucv8"
+  token: process.env.REACT_APP_NFT_STORAGE_API_KEY
 });
 
 // jhf api key ：eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDkxNjhiZDExQ2MxODIxNWM2NTNmZUQ1QjYzZjhiMTg0NDAxOTA4YjMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY2NzY1MTI1ODQ3NiwibmFtZSI6ImFraXJhIn0.DvHGGXozXPzpx-i_Q6BpWWYsf5-nOgNcpFPSSwRucv8
@@ -93,7 +95,7 @@ const useMergeSvg = async (baseSVG, markedName, svgName) => {
 + result_url: 产出结果网址
 + self_jifen：评估自己的工作量
 */
-const useSbtIPFS = async (cName, cDescription, imageData, nickName, roleName) => {
+const sbtIPFS = async (cName, cDescription, imageData, roleName) => {
   /*
     test communityAddress :0x1613544204458181CE82240CD0ab9C114B3B899d
     cName: 'Plancker'
@@ -105,15 +107,11 @@ const useSbtIPFS = async (cName, cDescription, imageData, nickName, roleName) =>
     attributes: [
       {
         "trait_type": "eventName",
-        "value": "大理活動參加"
-      },
-      {
-        "trait_type": "nickName",
-        "value": nickName
+        "value": process.env.REACT_APP_EVT_NAME
       },
       {
         "trait_type": "roleName",
-        "value": roleName
+        "value": process.env.REACT_APP_COMMU_ACT_NAME + roleName + process.env.REACT_APP_COMMU_ACT_TAIL
       },
     ],
     image: imageData,
@@ -138,4 +136,4 @@ const useSbtIPFS = async (cName, cDescription, imageData, nickName, roleName) =>
   return url;
 };
 
-export { useSave2IPFS, useMergeSvg, useSbtIPFS };
+export { useSave2IPFS, useMergeSvg, sbtIPFS };

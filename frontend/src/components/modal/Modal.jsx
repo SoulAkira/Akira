@@ -15,23 +15,22 @@ const Modal = (props) => {
       } else {
         context.fillStyle = '#FFFFFF';
       }
-      context.font = "700 200px Inter";
-      context.textAlign = "center";
-      context.fillText(props.item.nickName, 1920, 3520);
+
       context.font = "600 150px Inter";
       context.textAlign = "center";
-      context.fillText(props.item.roleName, 1920, 3750);
+      let _roleName = process.env.REACT_APP_COMMU_ACT_NAME + props.item.roleName + process.env.REACT_APP_COMMU_ACT_TAIL
+      context.fillText(_roleName, 1920, 3750);
     };
     image.src = props.img;
   });
 
   return (
     <div>
-      <label for={`my-modal-${props.item.id}`} className="btn modal-button">View</label>
+      <label htmlFor={`my-modal-${props.item.id}`} className="btn modal-button">View</label>
       <input type="checkbox" id={`my-modal-${props.item.id}`} className="modal-toggle" />
       <div className="modal">
         <div className="relative modal-box">
-          <label for={`my-modal-${props.item.id}`} className="absolute btn btn-sm btn-circle right-2 top-2">✕</label>
+          <label htmlFor={`my-modal-${props.item.id}`} className="absolute btn btn-sm btn-circle right-2 top-2">✕</label>
           <h3 className="text-lg font-bold">{props.item.nickName}-{props.item.roleName}</h3>
           <div>
             <canvas ref={myCanvas} width={3840} height={3840} style={{ height: '400px' }} />

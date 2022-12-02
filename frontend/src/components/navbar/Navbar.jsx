@@ -9,7 +9,7 @@ const Menu = () => (
   <>
     {/* <Link to="/create"><p>create community </p> </Link> */}
     {/* <Link to="/createEvent"><p>create event </p> </Link> */}
-    <Link to="/importSBT"><p>Drop SBT</p> </Link>
+    <Link to="/importSBT"><p>SBT</p> </Link>
     <Link to="/eventProfile/Rian"><p>My</p></Link>
 
   </>
@@ -17,15 +17,15 @@ const Menu = () => (
 
 const Navbar = () => {
   const address = useAddress();
-  const connectWithMetamask = useMetamask();
-  const disconnect = useDisconnect();
+  //const connectWithMetamask = useMetamask();
+  //const disconnect = useDisconnect();
 
   const [toggleMenu, setToggleMenu] = useState(false)
   const [user, setUser] = useState(false)
 
-  const handleLogout = () => {
-    setUser(false);
-  }
+  // const handleLogout = () => {
+  //   setUser(false);
+  // }
   const handleLogin = () => {
     setUser(true);
   }
